@@ -26,7 +26,7 @@ import { MoreHorizontal, Check, X, Clock } from 'lucide-react';
 
 interface BookingsTableProps {
   bookings: Booking[];
-  onStatusChange: () => void;
+  onStatusChange: (bookingId: string, newStatus: 'pending' | 'confirmed' | 'cancelled') => void;
 }
 
 export default function BookingsTable({ bookings, onStatusChange }: BookingsTableProps) {
@@ -36,7 +36,7 @@ export default function BookingsTable({ bookings, onStatusChange }: BookingsTabl
     try {
       setUpdatingId(bookingId);
       await updateBookingStatus(bookingId, newStatus);
-      onStatusChange();
+      onStatusChange(bookingId, newStatus);
     } catch (error) {
       console.error('Failed to update booking status:', error);
     } finally {
@@ -93,9 +93,9 @@ export default function BookingsTable({ bookings, onStatusChange }: BookingsTabl
                   </div>
                 </div>
               </TableCell>
-              <TableCell className="font-medium">{booking.user_name}</TableCell>
-              <TableCell>{booking.user_email}</TableCell>
-              <TableCell>{booking.user_phone || '-'}</TableCell>
+              <TableCell className="font-medium">{booking.customer_name}</TableCell>
+              <TableCell>{booking.customer_email}</TableCell>
+              <TableCell>{booking.customer_phone || '-'}</TableCell>
               <TableCell>{getStatusBadge(booking.status)}</TableCell>
               <TableCell className="text-sm text-muted-foreground">
                 {format(new Date(booking.created_at), 'MMM d, h:mm a')}

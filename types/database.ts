@@ -29,23 +29,22 @@ export interface TimeSlot {
   id: string;
   venue_id: string;
   day_of_week: number; // 0-6
-  start_time: string; // HH:MM
-  end_time: string; // HH:MM
+  start_time: string; // HH:MM:SS
+  end_time: string; // HH:MM:SS
   is_available: boolean;
-  recurring: boolean;
-  specific_date?: Date;
+  created_at: Date;
 }
 
 export interface Booking {
   id: string;
   venue_id: string;
-  user_name: string;
-  user_email: string;
-  user_phone?: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone?: string;
   start_time: Date;
   end_time: Date;
   status: 'pending' | 'confirmed' | 'cancelled';
-  custom_data?: Record<string, any>;
+  notes?: string;
   created_at: Date;
   updated_at: Date;
 }
