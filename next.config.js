@@ -9,9 +9,6 @@ const nextConfig = {
     config.externals = [...(config.externals || []), 'duckdb-async'];
     return config;
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
 }
 
 module.exports = nextConfig
