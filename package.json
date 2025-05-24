@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/cartesive/bookanything#readme",
   "dependencies": {
+    "date-fns": "^4.1.0",
     "duckdb-async": "^1.2.1",
     "next": "^15.1.8",
     "react": "^19.1.0",
