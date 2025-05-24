@@ -49,10 +49,15 @@ export default function BookingForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold mb-4">Complete Your Booking</h3>
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+      <h3 className="text-2xl font-semibold mb-6 flex items-center">
+        <svg className="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Complete Your Booking
+      </h3>
       
-      <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
         <p className="text-sm text-gray-600">
           <span className="font-medium">Date:</span> {format(selectedDate, 'EEEE, MMMM d, yyyy')}
         </p>

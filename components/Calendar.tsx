@@ -32,8 +32,8 @@ export default function Calendar({ selectedDate, onDateSelect, availableDates }:
   const isPastDate = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="bg-white rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200">
         <button
           onClick={previousMonth}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -57,15 +57,16 @@ export default function Calendar({ selectedDate, onDateSelect, availableDates }:
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center text-sm font-medium text-gray-600 py-2">
-            {day}
-          </div>
-        ))}
-      </div>
+      <div className="p-4">
+        <div className="grid grid-cols-7 gap-1 mb-2">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+            <div key={day} className="text-center text-xs font-medium text-gray-500 py-2">
+              {day}
+            </div>
+          ))}
+        </div>
 
-      <div className="grid grid-cols-7 gap-1">
+        <div className="grid grid-cols-7 gap-1">
         {monthDays.map((day, index) => {
           const isSelected = selectedDate && isSameDay(day, selectedDate);
           const isAvailable = isDateAvailable(day);
@@ -90,6 +91,7 @@ export default function Calendar({ selectedDate, onDateSelect, availableDates }:
             </button>
           );
         })}
+        </div>
       </div>
     </div>
   );
