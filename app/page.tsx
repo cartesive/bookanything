@@ -49,11 +49,11 @@ export default function Home() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <Clock className="w-6 h-6 text-green-600" />
               </div>
-              <CardTitle>No Server Required</CardTitle>
+              <CardTitle>Flexible Storage</CardTitle>
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Works with static hosting. Uses browser storage for demo, easily connects to any backend.
+                Works with static hosting. Choose between localStorage for demos or DuckDB WebAssembly for production-ready SQL in the browser.
               </CardDescription>
             </CardContent>
           </Card>
