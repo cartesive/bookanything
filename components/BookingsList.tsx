@@ -65,11 +65,11 @@ export default function BookingsList({ venueId, date, onBookingCancelled }: Book
           >
             <div className="flex justify-between items-start">
               <div>
-                <p className="font-medium text-gray-900">{booking.user_name}</p>
+                <p className="font-medium text-gray-900">{booking.customer_name}</p>
                 <p className="text-sm text-gray-600">
                   {format(new Date(booking.start_time), 'h:mm a')} - {format(new Date(booking.end_time), 'h:mm a')}
                 </p>
-                <p className="text-sm text-gray-500">{booking.user_email}</p>
+                <p className="text-sm text-gray-500">{booking.customer_email}</p>
                 {booking.status === 'cancelled' && (
                   <span className="inline-block mt-1 text-xs bg-gray-200 text-gray-700 px-2 py-1 rounded">
                     Cancelled

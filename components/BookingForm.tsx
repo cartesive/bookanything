@@ -26,9 +26,9 @@ export default function BookingForm({
   onCancel 
 }: BookingFormProps) {
   const [formData, setFormData] = useState({
-    user_name: '',
-    user_email: '',
-    user_phone: '',
+    customer_name: '',
+    customer_email: '',
+    customer_phone: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -41,9 +41,9 @@ export default function BookingForm({
     try {
       await onSubmit({
         venue_id: venueId,
-        user_name: formData.user_name,
-        user_email: formData.user_email,
-        user_phone: formData.user_phone,
+        customer_name: formData.customer_name,
+        customer_email: formData.customer_email,
+        customer_phone: formData.customer_phone,
         start_time: selectedSlot.start,
         end_time: selectedSlot.end,
         status: 'confirmed',
@@ -87,8 +87,8 @@ export default function BookingForm({
               type="text"
               id="name"
               required
-              value={formData.user_name}
-              onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
+              value={formData.customer_name}
+              onChange={(e) => setFormData({ ...formData, customer_name: e.target.value })}
               placeholder="John Doe"
             />
           </div>
@@ -99,8 +99,8 @@ export default function BookingForm({
               type="email"
               id="email"
               required
-              value={formData.user_email}
-              onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
+              value={formData.customer_email}
+              onChange={(e) => setFormData({ ...formData, customer_email: e.target.value })}
               placeholder="john@example.com"
             />
           </div>
@@ -110,8 +110,8 @@ export default function BookingForm({
             <Input
               type="tel"
               id="phone"
-              value={formData.user_phone}
-              onChange={(e) => setFormData({ ...formData, user_phone: e.target.value })}
+              value={formData.customer_phone}
+              onChange={(e) => setFormData({ ...formData, customer_phone: e.target.value })}
               placeholder="+1 (555) 123-4567"
             />
           </div>
