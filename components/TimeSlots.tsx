@@ -28,6 +28,13 @@ export default function TimeSlots({ slots, selectedSlot, onSlotSelect }: TimeSlo
         const isSelected = selectedSlot && 
           slot.start.getTime() === selectedSlot.start.getTime();
         
+        // Validate that slot.start is a valid Date
+        const isValidDate = slot.start instanceof Date && !isNaN(slot.start.getTime());
+        if (!isValidDate) {
+          console.warn('Invalid date in slot:', slot);
+          return null;
+        }
+        
         return (
           <Button
             key={index}

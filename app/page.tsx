@@ -53,7 +53,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <CardDescription>
-                Works with static hosting. Choose between localStorage for demos or DuckDB WebAssembly for production-ready SQL in the browser.
+                Works with static hosting. Powered by DuckDB WebAssembly for production-ready SQL database functionality directly in the browser.
               </CardDescription>
             </CardContent>
           </Card>

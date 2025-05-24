@@ -1,57 +1,178 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Booking } from '@/lib/types';
+import { fetchAllBookings, updateBookingStatus, getBookingStats } from '@/lib/admin-database';
+import BookingsTable from '@/components/admin/BookingsTable';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Calendar, Clock, Users, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+
 export default function AdminPage() {
-  return (
-    <div className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Admin Panel</h1>
-          <p className="text-lg text-gray-600">
-            Manage venues, time slots, and bookings
-          </p>
-        </div>
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<'all' | 'today' | 'week'>('all');
 
-        <div className="bg-blue-50 rounded-xl p-12 text-center border border-blue-200">
-          <svg className="w-16 h-16 text-blue-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          <h2 className="text-2xl font-semibold mb-2">Admin Interface Coming Soon</h2>
-          <p className="text-gray-600 max-w-md mx-auto">
-            The admin panel will allow you to configure venues, set operating hours, 
-            manage bookings, and customize booking rules.
-          </p>
-        </div>
+  useEffect(() => {
+    loadData();
+  }, [filter]);
 
-        <div className="grid md:grid-cols-3 gap-6 mt-12">
-          <div className="bg-gray-50 rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-              </svg>
-            </div>
-            <h3 className="font-semibold mb-2">Venue Management</h3>
-            <p className="text-sm text-gray-600">Create and configure multiple venues</p>
-          </div>
+  async function loadData() {
+    try {
+      const venueId = 'demo-venue';
+      let startDate: Date | undefined;
+      let endDate: Date | undefined;
+      
+      const now = new Date();
+      if (filter === 'today') {
+        startDate = new Date(now.setHours(0, 0, 0, 0));
+        endDate = new Date(now.setHours(23, 59, 59, 999));
+      } else if (filter === 'week') {
+        startDate = new Date();
+        endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+      }
 
-          <div className="bg-gray-50 rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 className="font-semibold mb-2">Time Slot Configuration</h3>
-            <p className="text-sm text-gray-600">Set operating hours and booking duration</p>
-          </div>
+      const [bookingsData, statsData] = await Promise.all([
+        fetchAllBookings(venueId, startDate, endDate),
+        getBookingStats(venueId)
+      ]);
+      
+      setBookings(bookingsData);
+      setStats(statsData);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-          <div className="bg-gray-50 rounded-xl p-6 text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-              </svg>
-            </div>
-            <h3 className="font-semibold mb-2">Booking Management</h3>
-            <p className="text-sm text-gray-600">View, modify, and cancel bookings</p>
-          </div>
+  async function handleStatusChange(bookingId: string, newStatus: 'pending' | 'confirmed' | 'cancelled') {
+    try {
+      await updateBookingStatus(bookingId, newStatus);
+      await loadData();
+    } catch (error) {
+      console.error('Failed to update booking status:', error);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading admin dashboard...</p>
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="container mx-auto py-8 px-4">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <p className="text-muted-foreground mt-2">Manage bookings and view analytics</p>
+      </div>
+
+      {/* Stats Cards */}
+      {stats && (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.total}</div>
+              <p className="text-xs text-muted-foreground">All time bookings</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Confirmed</CardTitle>
+              <CheckCircle className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.confirmed}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? Math.round((stats.confirmed / stats.total) * 100) : 0}% of total
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Pending</CardTitle>
+              <AlertCircle className="h-4 w-4 text-yellow-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.pending}</div>
+              <p className="text-xs text-muted-foreground">Awaiting confirmation</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Cancelled</CardTitle>
+              <XCircle className="h-4 w-4 text-red-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.cancelled}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? Math.round((stats.cancelled / stats.total) * 100) : 0}% of total
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Bookings Section */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Bookings</CardTitle>
+              <CardDescription>View and manage all bookings</CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant={filter === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('all')}
+              >
+                All
+              </Button>
+              <Button
+                variant={filter === 'today' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('today')}
+              >
+                Today
+              </Button>
+              <Button
+                variant={filter === 'week' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilter('week')}
+              >
+                Next 7 Days
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {bookings.length === 0 ? (
+            <div className="text-center py-12">
+              <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <p className="text-muted-foreground">No bookings found for the selected period.</p>
+            </div>
+          ) : (
+            <BookingsTable bookings={bookings} onStatusChange={handleStatusChange} />
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
