@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import Calendar from './Calendar';
 import TimeSlots from './TimeSlots';
 import BookingForm from './BookingForm';
-import { fetchVenue, fetchAvailableSlots, createBooking } from '@/lib/database-client';
+import { fetchVenue, fetchAvailableSlots, createBooking } from '@/lib/database-provider';
 import { Venue, BookingSlot } from '@/types/database';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';

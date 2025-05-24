@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Booking } from '@/types/database';
-import { fetchBookings, cancelBooking } from '@/lib/database-client';
+import { fetchBookings, cancelBooking } from '@/lib/database-provider';
 
 interface BookingsListProps {
   venueId: string;
