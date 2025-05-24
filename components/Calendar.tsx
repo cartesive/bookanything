@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface CalendarProps {
   selectedDate: Date | null;
@@ -32,34 +35,32 @@ export default function Calendar({ selectedDate, onDateSelect, availableDates }:
   const isPastDate = (date: Date) => date < new Date(new Date().setHours(0, 0, 0, 0));
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4">
+    <div>
       <div className="flex items-center justify-between mb-4">
-        <button
+        <Button
           onClick={previousMonth}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          variant="outline"
+          size="icon"
           aria-label="Previous month"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
         <h2 className="text-lg font-semibold">
           {format(currentMonth, 'MMMM yyyy')}
         </h2>
-        <button
+        <Button
           onClick={nextMonth}
-          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          variant="outline"
+          size="icon"
           aria-label="Next month"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+          <ChevronRight className="h-4 w-4" />
+        </Button>
       </div>
 
       <div className="grid grid-cols-7 gap-1 mb-2">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <div key={day} className="text-center text-sm font-medium text-gray-600 py-2">
+          <div key={day} className="text-center text-xs font-medium text-muted-foreground py-2">
             {day}
           </div>
         ))}
@@ -73,21 +74,20 @@ export default function Calendar({ selectedDate, onDateSelect, availableDates }:
           const isCurrentDay = isToday(day);
 
           return (
-            <button
+            <Button
               key={index}
               onClick={() => !isPast && isAvailable && onDateSelect(day)}
               disabled={isPast || !isAvailable}
-              className={`
-                p-3 text-sm rounded-lg font-medium transition-all
-                ${isSelected ? 'bg-blue-600 text-white' : ''}
-                ${!isSelected && isCurrentDay ? 'bg-blue-50 text-blue-600' : ''}
-                ${!isSelected && !isCurrentDay && isAvailable && !isPast ? 'hover:bg-gray-100' : ''}
-                ${isPast || !isAvailable ? 'text-gray-300 cursor-not-allowed' : ''}
-                ${!isSelected && !isPast && isAvailable ? 'text-gray-700' : ''}
-              `}
+              variant={isSelected ? "default" : "ghost"}
+              className={cn(
+                "h-9 w-9 p-0 font-normal",
+                isSelected && "text-primary-foreground",
+                !isSelected && isCurrentDay && "bg-accent text-accent-foreground",
+                (isPast || !isAvailable) && "text-muted-foreground opacity-50"
+              )}
             >
               {format(day, 'd')}
-            </button>
+            </Button>
           );
         })}
       </div>

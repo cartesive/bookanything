@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { BookingSlot, Booking } from '@/types/database';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle } from 'lucide-react';
 
 interface BookingFormProps {
   venueId: string;
@@ -49,87 +55,87 @@ export default function BookingForm({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold mb-4">Complete Your Booking</h3>
-      
-      <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-        <p className="text-sm text-gray-600">
-          <span className="font-medium">Date:</span> {format(selectedDate, 'EEEE, MMMM d, yyyy')}
-        </p>
-        <p className="text-sm text-gray-600">
-          <span className="font-medium">Time:</span> {format(selectedSlot.start, 'h:mm a')} - {format(selectedSlot.end, 'h:mm a')}
-        </p>
-      </div>
-
-      {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-600">{error}</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Name *
-          </label>
-          <input
-            type="text"
-            id="name"
-            required
-            value={formData.user_name}
-            onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="John Doe"
-          />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <CheckCircle className="w-5 h-5 text-primary" />
+          Complete Your Booking
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="mb-6 p-4 bg-muted rounded-lg">
+          <div className="space-y-1">
+            <p className="text-sm">
+              <span className="font-medium">Date:</span> {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+            </p>
+            <p className="text-sm">
+              <span className="font-medium">Time:</span> {format(selectedSlot.start, 'h:mm a')} - {format(selectedSlot.end, 'h:mm a')}
+            </p>
+          </div>
         </div>
 
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email *
-          </label>
-          <input
-            type="email"
-            id="email"
-            required
-            value={formData.user_email}
-            onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="john@example.com"
-          />
-        </div>
+        {error && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
 
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Phone (optional)
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            value={formData.user_phone}
-            onChange={(e) => setFormData({ ...formData, user_phone: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="+1 (555) 123-4567"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Name *</Label>
+            <Input
+              type="text"
+              id="name"
+              required
+              value={formData.user_name}
+              onChange={(e) => setFormData({ ...formData, user_name: e.target.value })}
+              placeholder="John Doe"
+            />
+          </div>
 
-        <div className="flex gap-3 pt-4">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? 'Booking...' : 'Confirm Booking'}
-          </button>
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isSubmitting}
-            className="flex-1 bg-gray-200 text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email *</Label>
+            <Input
+              type="email"
+              id="email"
+              required
+              value={formData.user_email}
+              onChange={(e) => setFormData({ ...formData, user_email: e.target.value })}
+              placeholder="john@example.com"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone (optional)</Label>
+            <Input
+              type="tel"
+              id="phone"
+              value={formData.user_phone}
+              onChange={(e) => setFormData({ ...formData, user_phone: e.target.value })}
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1"
+            >
+              {isSubmitting ? 'Booking...' : 'Confirm Booking'}
+            </Button>
+            <Button
+              type="button"
+              onClick={onCancel}
+              disabled={isSubmitting}
+              variant="outline"
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
